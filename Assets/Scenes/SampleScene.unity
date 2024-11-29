@@ -223,6 +223,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2066083327990700939, guid: 944a383ff00c093418500093454e1c9f, type: 3}
+      propertyPath: m_Constraints
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2066083327990700939, guid: 944a383ff00c093418500093454e1c9f, type: 3}
+      propertyPath: m_GravityScale
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6101922783073784246, guid: 944a383ff00c093418500093454e1c9f, type: 3}
       propertyPath: m_Name
       value: Miner Joe

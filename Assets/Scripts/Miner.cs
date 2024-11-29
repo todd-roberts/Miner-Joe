@@ -9,6 +9,12 @@ public class Miner : MonoBehaviour
     private SpriteRenderer spriteRenderer; 
 
     private Vector2 movementInput;
+    private Vector2 facing;
+
+    public GameObject rightPick;
+    public GameObject leftPick;
+    public GameObject upPick;
+    public GameObject downPick;
 
     private void Awake()
     {
@@ -20,6 +26,45 @@ public class Miner : MonoBehaviour
     public void OnMove(InputValue value)
     {
         movementInput = value.Get<Vector2>();
+
+        if (movementInput.x > 0)
+        {
+            facing = new Vector2(1, 0);
+        }
+        else if (movementInput.x < 0)
+        {
+            facing = new Vector2(-1, 0);
+        }
+        else if (movementInput.y > 0)
+        {
+            facing = new Vector2(0, 1);
+        }
+        else if (movementInput.y < 0)
+        {
+            facing = new Vector2(0, -1);
+        }
+    }
+
+    public void OnFire()
+    {
+        Debug.Log(movementInput);
+
+        if (facing.x > 0)
+        {
+            rightPick.SetActive(true);
+        }
+        else if (facing.x < 0)
+        {
+            leftPick.SetActive(true);
+        }
+        else if (facing.y > 0)
+        {
+            upPick.SetActive(true);
+        }
+        else if (facing.y < 0)
+        {
+            downPick.SetActive(true);
+        }     
     }
 
     private void Update()
