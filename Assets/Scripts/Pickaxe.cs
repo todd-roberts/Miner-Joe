@@ -10,85 +10,99 @@ public enum SwingDirection
 
 public class Pickaxe : MonoBehaviour
 {
-    public GameObject rightPick;
-    public GameObject leftPick;
-    public GameObject upPick;
-    public GameObject downPick;
+    private AudioSource audioSource;
 
+    public AudioClip hitSound;
+    public DirectionalPickaxe rightPick;
+    public DirectionalPickaxe leftPick;
+    public DirectionalPickaxe upPick;
+    public DirectionalPickaxe downPick;
 
+    [SerializeField]
+    private int damage = 1;
+
+    private void Awake()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
 
     private void Update()
     {
         HandleCompleteSwing();
     }
 
-    private void HandleCompleteSwing() {
-        Animator animator = null;
+    private void HandleCompleteSwing()
+    {
+        DirectionalPickaxe pickaxe = GetActivePickaxe();
 
-        if (rightPick.activeSelf)
-            animator = rightPick.GetComponent<Animator>();
-        else if (leftPick.activeSelf)
-            animator = leftPick.GetComponent<Animator>();
-        else if (upPick.activeSelf)
-            animator = upPick.GetComponent<Animator>();
-        else if (downPick.activeSelf)
-            animator = downPick.GetComponent<Animator>();
+        if (pickaxe == null)
+            return;
 
-        if (animator != null)
+        if (!pickaxe.IsSwinging())
         {
-            AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-
-            // Check if the animation is done playing
-            if (stateInfo.normalizedTime >= 1.0f && !animator.IsInTransition(0))
-            {
-                TurnOffPicks();
-            }
+           pickaxe.gameObject.SetActive(false);
         }
+    }
+
+    private DirectionalPickaxe GetActivePickaxe()
+    {
+        if (rightPick.gameObject.activeSelf)
+            return rightPick;
+        else if (leftPick.gameObject.activeSelf)
+            return leftPick;
+        else if (upPick.gameObject.activeSelf)
+            return upPick;
+        else if (downPick.gameObject.activeSelf)
+            return downPick;
+
+        return null;
     }
 
     public void Swing(SwingDirection direction)
     {
-        string animationName = "";
-        GameObject pick = null;
+        DirectionalPickaxe pickaxe = GetPickaxeByDirection(direction);
 
-        if (direction == SwingDirection.DOWN)
-        {
-            pick = downPick;
-            animationName = "SwingDown";
-        }
+        pickaxe.gameObject.SetActive(true);
 
-        if (direction == SwingDirection.UP)
-        {
-            pick = upPick;
-            animationName = "SwingUp";
-        }
-
-        if (direction == SwingDirection.LEFT)
-        {
-            pick = leftPick;
-            animationName = "SwingHorizontal";
-        }
-
-        if (direction == SwingDirection.RIGHT)
-        {
-            pick = rightPick;
-            animationName = "SwingHorizontal";
-        }
-
-        pick.SetActive(true);
-        pick.GetComponent<Animator>().Play(animationName);
-
+        pickaxe.Swing();
     }
 
-    private void TurnOffPicks()
+    private DirectionalPickaxe GetPickaxeByDirection(SwingDirection direction)
     {
-        rightPick.SetActive(false);
-        leftPick.SetActive(false);
-        upPick.SetActive(false);
-        downPick.SetActive(false);
+        switch (direction)
+        {
+            case SwingDirection.DOWN:
+                return downPick;
+            case SwingDirection.UP:
+                return upPick;
+            case SwingDirection.LEFT:
+                return leftPick;
+            case SwingDirection.RIGHT:
+                return rightPick;
+            default:
+                return null;
+        }
     }
 
-    public bool IsSwinging() {
-        return rightPick.activeSelf || leftPick.activeSelf || upPick.activeSelf || downPick.activeSelf;
+
+    public bool IsSwinging()
+    {
+        DirectionalPickaxe pickAxe = GetActivePickaxe();
+
+        if (pickAxe == null) {
+            return false;
+        }
+
+        return pickAxe.IsSwinging();
+    }
+
+    public int GetDamage()
+    {
+        return damage;
+    }
+
+    public void PlayHitSound()
+    {
+        audioSource.PlayOneShot(hitSound);
     }
 }
