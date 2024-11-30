@@ -5,28 +5,34 @@ public class Miner : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 5f;
     private Rigidbody2D rb;
-    private Animator animator; 
-    private SpriteRenderer spriteRenderer; 
+    private Animator animator;
+    private SpriteRenderer spriteRenderer;
+
+    private AudioSource audioSource;
 
     private Vector2 movementInput;
     private Vector2 facing;
 
-    public GameObject rightPick;
-    public GameObject leftPick;
-    public GameObject upPick;
-    public GameObject downPick;
+    public Pickaxe pickaxe;
+
+    public AudioClip nyahSound;
+
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     public void OnMove(InputValue value)
     {
         movementInput = value.Get<Vector2>();
+    }
 
+    private void HandleFacing()
+    {
         if (movementInput.x > 0)
         {
             facing = new Vector2(1, 0);
@@ -47,30 +53,70 @@ public class Miner : MonoBehaviour
 
     public void OnFire()
     {
-        Debug.Log(movementInput);
+        HandleSwing();
+    }
 
-        if (facing.x > 0)
+    private void HandleSwing()
+    {
+        if (pickaxe.IsSwinging())
         {
-            rightPick.SetActive(true);
+            return;
+        }
+
+        audioSource.PlayOneShot(nyahSound);
+
+        if (IsInitialFacing() || facing.x > 0)
+        {
+            SwingRight();
         }
         else if (facing.x < 0)
         {
-            leftPick.SetActive(true);
+            SwingLeft();
         }
         else if (facing.y > 0)
         {
-            upPick.SetActive(true);
+            SwingUp();
         }
         else if (facing.y < 0)
         {
-            downPick.SetActive(true);
-        }     
+            SwingDown();
+        }
+    }
+
+    private bool IsInitialFacing() => facing.x == 0 && facing.y == 0;
+
+    private void SwingRight()
+    {
+        pickaxe.Swing(SwingDirection.RIGHT);
+        animator.Play("SwingHorizontal");
+    }
+
+    private void SwingLeft()
+    {
+        pickaxe.Swing(SwingDirection.LEFT);
+        animator.Play("SwingHorizontal");
+    }
+
+    private void SwingUp()
+    {
+        pickaxe.Swing(SwingDirection.UP);
+        animator.Play("SwingUp");
+    }
+
+    private void SwingDown()
+    {
+        pickaxe.Swing(SwingDirection.DOWN);
+        animator.Play("SwingDown");
     }
 
     private void Update()
     {
-        HandleAnimation();
-        HandleSpriteFlip();
+        if (!pickaxe.IsSwinging())
+        {
+            HandleFacing();
+            HandleAnimation();
+            HandleSpriteFlip();
+        }
     }
 
     // FixedUpdate is used instead of Update when working with physics (Rigidbody)
@@ -81,7 +127,8 @@ public class Miner : MonoBehaviour
 
     private void Move()
     {
-        rb.velocity = movementInput * moveSpeed;
+        rb.velocity = pickaxe.IsSwinging() ? Vector2.zero : movementInput * moveSpeed;
+
     }
 
     private void HandleAnimation()
