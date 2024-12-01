@@ -18,11 +18,11 @@ public class StateMachine<T>
         _currentState.Enter();
     }
 
-    public void SetNovelState(State<T> newState)
+    public void SetNovelState<TState>(TState newState)
     {
-        if (_currentState == null || !(_currentState is T))
+        if (_currentState == null || _currentState is not TState)
         {
-            SetState(newState);  
+            SetState(newState as State<T>);  
         }
     }
 
