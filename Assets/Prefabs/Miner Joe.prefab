@@ -129,7 +129,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: -333072186, guid: 5ff1a7a99981cb04fbd7a6e9e4b2b61a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -388,7 +388,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 715924323, guid: 5ff1a7a99981cb04fbd7a6e9e4b2b61a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 1
@@ -610,9 +610,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 647428421d0e0d143b51a1085e50a150, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 5
-  pickaxe: {fileID: 6741074527842863017}
-  nyahSound: {fileID: 8300000, guid: 025d9bc0a980c914ba48936d11682a17, type: 3}
+  _moveSpeed: 5
+  _pickaxe: {fileID: 6741074527842863017}
+  _swingSound: {fileID: 8300000, guid: 025d9bc0a980c914ba48936d11682a17, type: 3}
 --- !u!61 &8852605232861286075
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -908,7 +908,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: -433573946, guid: 5ff1a7a99981cb04fbd7a6e9e4b2b61a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -1102,7 +1102,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: -1648168838, guid: 5ff1a7a99981cb04fbd7a6e9e4b2b61a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

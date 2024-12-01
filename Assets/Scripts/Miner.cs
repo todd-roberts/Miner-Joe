@@ -1,151 +1,57 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Miner : MonoBehaviour
+public class Miner : Entity<Miner>
 {
-    [SerializeField] private float moveSpeed = 5f;
-    private Rigidbody2D rb;
-    private Animator animator;
-    private SpriteRenderer spriteRenderer;
+    private Rigidbody2D _rb;
+    private Animator _animator;
+    private SpriteRenderer _spriteRenderer;
+    private AudioSource _audioSource;
 
-    private AudioSource audioSource;
+    private Vector2 _movementInput;
+    [SerializeField] private float _moveSpeed = 5f;
+    private Vector2 _facing;
 
-    private Vector2 movementInput;
-    private Vector2 facing;
+    [SerializeField]
+    private Pickaxe _pickaxe;
 
-    public Pickaxe pickaxe;
-
-    public AudioClip nyahSound;
-
+    [SerializeField]
+    private AudioClip _swingSound;
 
     private void Awake()
     {
-        rb = GetComponent<Rigidbody2D>();
-        animator = GetComponent<Animator>();
-        audioSource = GetComponent<AudioSource>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        _stateMachine = new StateMachine<Miner>(this);
+        _rb = GetComponent<Rigidbody2D>();
+        _animator = GetComponent<Animator>();
+        _audioSource = GetComponent<AudioSource>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
-    public void OnMove(InputValue value)
-    {
-        movementInput = value.Get<Vector2>();
-    }
+    public override State<Miner> GetInitialState() => new MinerIdleState();
 
-    private void HandleFacing()
-    {
-        if (movementInput.x > 0)
-        {
-            facing = new Vector2(1, 0);
-        }
-        else if (movementInput.x < 0)
-        {
-            facing = new Vector2(-1, 0);
-        }
-        else if (movementInput.y > 0)
-        {
-            facing = new Vector2(0, 1);
-        }
-        else if (movementInput.y < 0)
-        {
-            facing = new Vector2(0, -1);
-        }
-    }
+    public Rigidbody2D GetRigidbody() => _rb;
 
-    public void OnFire()
-    {
-        HandleSwing();
-    }
+    public Animator GetAnimator() => _animator;
 
-    private void HandleSwing()
-    {
-        if (pickaxe.IsSwinging())
-        {
-            return;
-        }
+    public AudioSource GetAudioSource() => _audioSource;
 
-        audioSource.PlayOneShot(nyahSound);
+    public SpriteRenderer GetSpriteRenderer() => _spriteRenderer;
+    public Vector2 GetMovementInput() => _movementInput;
 
-        if (IsInitialFacing() || facing.x > 0)
-        {
-            SwingRight();
-        }
-        else if (facing.x < 0)
-        {
-            SwingLeft();
-        }
-        else if (facing.y > 0)
-        {
-            SwingUp();
-        }
-        else if (facing.y < 0)
-        {
-            SwingDown();
-        }
-    }
+    public float GetMoveSpeed() => _moveSpeed;
 
-    private bool IsInitialFacing() => facing.x == 0 && facing.y == 0;
+    public Vector2 GetFacing() => _facing;
 
-    private void SwingRight()
-    {
-        pickaxe.Swing(SwingDirection.RIGHT);
-        animator.Play("SwingHorizontal");
-    }
+    public void SetFacing(Vector2 facing) => _facing = facing;
 
-    private void SwingLeft()
-    {
-        pickaxe.Swing(SwingDirection.LEFT);
-        animator.Play("SwingHorizontal");
-    }
+    public Pickaxe GetPickaxe() => _pickaxe;
 
-    private void SwingUp()
-    {
-        pickaxe.Swing(SwingDirection.UP);
-        animator.Play("SwingUp");
-    }
+    public void OnMove(InputValue value) => _movementInput = value.Get<Vector2>();
 
-    private void SwingDown()
-    {
-        pickaxe.Swing(SwingDirection.DOWN);
-        animator.Play("SwingDown");
-    }
+    public void OnFire() =>
+        _stateMachine.SetNovelState(new MinerSwingingState());
 
-    private void Update()
-    {
-        if (!pickaxe.IsSwinging())
-        {
-            HandleFacing();
-            HandleAnimation();
-            HandleSpriteFlip();
-        }
-    }
+    public bool IsInitialFacing() => _facing.x == 0 && _facing.y == 0;
 
-    // FixedUpdate is used instead of Update when working with physics (Rigidbody)
-    private void FixedUpdate()
-    {
-        Move();
-    }
-
-    private void Move()
-    {
-        rb.velocity = pickaxe.IsSwinging() ? Vector2.zero : movementInput * moveSpeed;
-
-    }
-
-    private void HandleAnimation()
-    {
-        bool isWalking = movementInput.magnitude > 0;
-        animator.SetBool("isWalking", isWalking);
-    }
-
-    private void HandleSpriteFlip()
-    {
-        if (movementInput.x > 0)
-        {
-            spriteRenderer.flipX = false;
-        }
-        else if (movementInput.x < 0)
-        {
-            spriteRenderer.flipX = true;
-        }
-    }
+    public void PlaySwingSound() => _audioSource.PlayOneShot(_swingSound);
 }

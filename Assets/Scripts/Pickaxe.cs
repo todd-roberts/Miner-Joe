@@ -84,7 +84,6 @@ public class Pickaxe : MonoBehaviour
         }
     }
 
-
     public bool IsSwinging()
     {
         DirectionalPickaxe pickAxe = GetActivePickaxe();
