@@ -1,4 +1,4 @@
-public abstract class State<T>
+public abstract class State<T> where T : Entity<T>
 {
     protected T _entity;
 

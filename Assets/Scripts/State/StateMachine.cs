@@ -1,4 +1,4 @@
-public class StateMachine<T>
+public class StateMachine<T> where T : Entity<T>
 {
     private readonly T _entity;
     private State<T> _currentState;
@@ -6,6 +6,11 @@ public class StateMachine<T>
     public StateMachine(T entity)
     {
         _entity = entity;
+    }
+
+    public void Initialize()
+    {
+        SetState(_entity.GetInitialState());
     }
 
     public void SetState(State<T> newState)

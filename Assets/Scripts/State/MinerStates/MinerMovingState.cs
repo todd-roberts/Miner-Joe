@@ -14,8 +14,19 @@ class MinerMovingState : State<Miner>
         
     public override void Update()
     {
+        CheckForIdle();
         HandleFacing();
         HandleSpriteFlip();
+    }
+
+    private void CheckForIdle()
+    {
+        Vector2 movementInput = _entity.GetMovementInput();
+
+        if (movementInput == Vector2.zero)
+        {
+            _entity.SetState(new MinerIdleState());
+        }
     }
 
     private void HandleFacing()

@@ -72,16 +72,13 @@ public class DirectionalPickaxe : MonoBehaviour
     {
         if (collision.CompareTag("Brick"))
         {
-            Brick brick = collision.GetComponent<Brick>();
-            HandleHitBrick(brick);
+           HandleHitBrick(collision);
         }
     }
 
-    private void HandleHitBrick(Brick brick)
+    private void HandleHitBrick(Collider2D collision)
     {
-        Debug.Log("Hit brick of type: " + brick.brickType);
-        int damage = parentPickaxe.GetDamage();
-        brick.TakeDamage(damage);
-        parentPickaxe.PlayHitSound();
+        Brick brick = collision.GetComponent<Brick>();
+        Miner.Broadcast("OnBrickHit", brick);
     }
 }

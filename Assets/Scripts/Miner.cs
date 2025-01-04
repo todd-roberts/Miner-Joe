@@ -1,8 +1,10 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class Miner : Entity<Miner>
 {
+    private static Miner _instance;
     private Rigidbody2D _rb;
     private Animator _animator;
     private SpriteRenderer _spriteRenderer;
@@ -18,13 +20,27 @@ public class Miner : Entity<Miner>
     [SerializeField]
     private AudioClip _swingSound;
 
-    private void Awake()
+    private HashSet<int> _keys = new HashSet<int>();
+
+    private int? _doorEntered = null;
+
+    protected override void OnAwake()
     {
+        if (_instance == null)
+        {
+            _instance = this;
+        }
         _stateMachine = new StateMachine<Miner>(this);
         _rb = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
         _audioSource = GetComponent<AudioSource>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
+    }
+
+    public static void Broadcast<TData>(string message, TData data)
+    {
+        Debug.Log(_instance);
+        _instance.BroadcastMessage(message, data);
     }
 
     public override State<Miner> GetInitialState() => new MinerIdleState();
@@ -54,4 +70,43 @@ public class Miner : Entity<Miner>
     public bool IsInitialFacing() => _facing.x == 0 && _facing.y == 0;
 
     public void PlaySwingSound() => _audioSource.PlayOneShot(_swingSound);
+
+    public void AddKey(int keyId)
+    {
+        _keys.Add(keyId);
+    }
+
+    public void TryOpenDoor(Door door)
+    {
+        if (CanOpenDoor(door))
+        {
+            EnterDoor(door);
+
+        }
+    }
+
+    private bool CanOpenDoor(Door door) => _keys.Contains(door.GetId());
+
+    private void EnterDoor(Door door)
+    {
+        _doorEntered = door.GetId();
+        door.Open();
+        //_stateMachine.SetState(new MinerEnterDoorState());
+    }
+
+
+    private void OnSceneLoaded()
+    {
+       HandleExitDoor();
+    }
+
+    private void HandleExitDoor() {
+        if (_doorEntered == null) return;
+
+        Door doorEntered = Door.GetDoorById(_doorEntered.Value);
+
+        transform.position = doorEntered.transform.position - new Vector3(0, 1.5f);
+
+        _doorEntered = null;
+    }
 }

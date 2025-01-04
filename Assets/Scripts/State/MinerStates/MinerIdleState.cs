@@ -7,13 +7,20 @@ class MinerIdleState : State<Miner>
         SetIdleAnimation();
     }
 
-    public override void Update(){
+    public override void Update()
+    {
         HandleMovement();
+    }
+
+    public override void FixedUpdate()
+    {
+        Rigidbody2D rb = _entity.GetRigidbody();
+        rb.velocity = Vector2.zero;
     }
 
     private void HandleMovement()
     {
-       Vector2 movementInput = _entity.GetMovementInput();
+        Vector2 movementInput = _entity.GetMovementInput();
 
         if (movementInput != Vector2.zero)
         {

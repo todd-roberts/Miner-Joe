@@ -1,8 +1,16 @@
 using UnityEngine;
 
-public abstract class Entity<T> : MonoBehaviour
+public abstract class Entity<T> : MonoBehaviour where T : Entity<T>
 {
-    protected StateMachine<T> _stateMachine; 
+    protected StateMachine<T> _stateMachine;
+
+    protected virtual void Awake()
+    {
+        OnAwake();
+        _stateMachine.Initialize();
+    }
+
+    protected virtual void OnAwake() { }
 
     private void Update()
     {

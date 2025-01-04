@@ -10,20 +10,28 @@ public enum SwingDirection
 
 public class Pickaxe : MonoBehaviour
 {
-    private AudioSource audioSource;
+    private static Pickaxe _instance;
+    private AudioSource _audioSource;
 
     public AudioClip hitSound;
+    public AudioClip levelUpSound;
     public DirectionalPickaxe rightPick;
     public DirectionalPickaxe leftPick;
     public DirectionalPickaxe upPick;
     public DirectionalPickaxe downPick;
+    
+    [SerializeField]
+    private ExperienceManager _experienceManager = new();
 
     [SerializeField]
-    private int damage = 1;
+    private int _damage = 1;
 
     private void Awake()
     {
-        audioSource = GetComponent<AudioSource>();
+        if (_instance == null) {
+            _instance = this;
+        }
+        _audioSource = GetComponent<AudioSource>();
     }
 
     private void Update()
@@ -95,13 +103,35 @@ public class Pickaxe : MonoBehaviour
         return pickAxe.IsSwinging();
     }
 
-    public int GetDamage()
+
+    private void OnBrickHit(Brick brick)
     {
-        return damage;
+        brick.TakeDamage(_damage);
+       _audioSource.PlayOneShot(hitSound);
     }
 
-    public void PlayHitSound()
+    private void OnBrickBreak(Brick brick)
     {
-        audioSource.PlayOneShot(hitSound);
+        bool leveledUp = _experienceManager.AddExperience(brick.experience);
+
+        _audioSource.PlayOneShot(brick.breakSound);
+
+        if (leveledUp)
+        {
+            _audioSource.PlayOneShot(levelUpSound);
+        }
+    }
+
+    public static bool IsMaxLevel()
+    {
+        return _instance._experienceManager.IsMaxLevel();
+    }
+
+    public static int GetCurrentLevel() {
+        return _instance._experienceManager.GetCurrentLevel();
+    }
+
+    public static float GetLevelCompletionPercentage () {
+        return _instance._experienceManager.GetLevelCompletionPercentage();
     }
 }
