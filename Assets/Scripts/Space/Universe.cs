@@ -47,7 +47,11 @@ public class Universe : MonoBehaviour
 
         for (int ring = 1; ring <= ringCount; ring++)
         {
-            new UniverseRing(ring, this);
+            new PlanetRing(ring, this);
+        }
+
+        foreach (var key in GameState.Planets.Keys) {
+            Debug.Log(key);
         }
     }
 
@@ -113,6 +117,7 @@ public class Universe : MonoBehaviour
 
 
     // Setting Getters
+    public static float GetSize() => _instance._size;
     public float GetRingSpread() => _ringSpread;
     public float GetRingSparseness() => _ringSparseness;
     public float GetJitter() => _jitter;

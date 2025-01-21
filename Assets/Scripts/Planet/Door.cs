@@ -72,7 +72,7 @@ public class Door : MonoBehaviour
             stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
         }
 
-        GameManager.ChangeScene(_targetSceneIndex);
+        SceneManager.ChangeScene(_targetSceneIndex);
     }
 
     public static Door GetDoorById(int id)

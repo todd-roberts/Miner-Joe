@@ -28,7 +28,7 @@ public class DoorEditor : Editor
 
     private string[] GetAllScenes()
     {
-        int sceneCount = SceneManager.sceneCountInBuildSettings;
+        int sceneCount = UnityEngine.SceneManagement.SceneManager.sceneCountInBuildSettings;
         string[] scenes = new string[sceneCount];
         for (int i = 0; i < sceneCount; i++)
         {

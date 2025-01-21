@@ -60,8 +60,4 @@ public class Spaceship : Entity<Spaceship>
     {
         _stateMachine.SetState(new SpaceshipExplorationState());
     }
-
-    public void Test() {
-        Debug.Log("Test");
-    }
 }

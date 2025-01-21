@@ -1,11 +1,11 @@
 using UnityEngine;
 
-public class UniverseRing
+public class PlanetRing
 {
     private int _ringNumber;
     private Universe _universe;
 
-    public UniverseRing(int ringNumber, Universe universe)
+    public PlanetRing(int ringNumber, Universe universe)
     {
         _ringNumber = ringNumber;
         _universe = universe;
@@ -23,7 +23,8 @@ public class UniverseRing
     private void InitializeRingSide(int sideIndex)
     {
         // We subtract 1 to avoid placing overlapping planets from conjoining sides 
-        int numPositions = Mathf.FloorToInt(GetSideLength() / _universe.GetRingSparseness() - 1);
+        int numPositions = Mathf.Max(1, Mathf.FloorToInt(GetSideLength() / _universe.GetRingSparseness()) - 1);
+        
         float stepSize = GetSideLength() / numPositions;
 
         for (int i = 0; i < numPositions; i++)
@@ -40,7 +41,7 @@ public class UniverseRing
 
         if (Random.value < _universe.GetPlanetChance())
         {
-            position += (Vector3)Random.insideUnitCircle * _universe.GetJitter();
+            position += (Vector3)Random.insideUnitCircle * 0;
 
             // We don't initialize Planet data until it's necessary. We simply store the position.
             GameState.Planets.Add(position, null);

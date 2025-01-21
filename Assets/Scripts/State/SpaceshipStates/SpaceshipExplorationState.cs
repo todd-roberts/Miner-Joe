@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 class SpaceshipExplorationState : State<Spaceship>
@@ -13,10 +14,29 @@ class SpaceshipExplorationState : State<Spaceship>
     private void UpdateUniversePosition()
     {
         Background background = _entity.GetBackground();
-        Vector3 shipPosition = _entity.transform.position;
+        Vector3 currentShipPosition = _entity.transform.position;
 
-        background.Offset(GameState.Spaceship.Position - shipPosition);
-        GameState.Spaceship.Position = shipPosition;
+        if (!ShipWrappedAround())
+        {
+            Vector3 movementThisFrame = GameState.Spaceship.Position - currentShipPosition;
+            background.Offset(movementThisFrame);
+        }
+
+        GameState.Spaceship.Position = currentShipPosition;
+    }
+
+    private bool ShipWrappedAround()
+    {
+        Vector3 currentShipPosition = _entity.transform.position;
+        Vector3 savedShipPosition = GameState.Spaceship.Position;
+
+        bool nearEdgeX = Math.Abs(savedShipPosition.x) > Universe.GetSize() / 2;
+        bool nearEdgeY = Math.Abs(savedShipPosition.y) > Universe.GetSize() / 2;
+
+        bool wrappedHorizontal = nearEdgeX && Math.Sign(currentShipPosition.x) != Math.Sign(savedShipPosition.x);
+        bool wrappedVertical = nearEdgeY && Math.Sign(currentShipPosition.y) != Math.Sign(savedShipPosition.y);
+
+        return wrappedHorizontal || wrappedVertical;
     }
 
     private void CheckNearbyPlanets()
