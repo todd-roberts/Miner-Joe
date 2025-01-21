@@ -10,12 +10,24 @@ class MinerSwingingState : State<Miner>
     private void HandleSwing()
     {
         Pickaxe pickaxe = _entity.GetPickaxe();
-        Vector2 facing = _entity.GetFacing();
+        Vector2 facing = GameState.Miner.Facing;
         Animator animator = _entity.GetAnimator();
 
         _entity.PlaySwingSound();
 
-        if (_entity.IsInitialFacing() || facing.x > 0)
+        bool isInitialFacing = GameState.Miner.Facing == Vector2.zero;
+
+        if (isInitialFacing || facing.y < 0)
+        {
+            pickaxe.Swing(SwingDirection.DOWN);
+            animator.Play("SwingDown");
+        }
+         else if (facing.y > 0)
+        {
+            pickaxe.Swing(SwingDirection.UP);
+            animator.Play("SwingUp");
+        }
+        else if (facing.x > 0)
         {
             pickaxe.Swing(SwingDirection.RIGHT);
             animator.Play("SwingHorizontal");
@@ -25,16 +37,7 @@ class MinerSwingingState : State<Miner>
             pickaxe.Swing(SwingDirection.LEFT);
             animator.Play("SwingHorizontal");
         }
-        else if (facing.y > 0)
-        {
-            pickaxe.Swing(SwingDirection.UP);
-            animator.Play("SwingUp");
-        }
-        else if (facing.y < 0)
-        {
-            pickaxe.Swing(SwingDirection.DOWN);
-            animator.Play("SwingDown");
-        }
+    
     }
 
     public override void Update()

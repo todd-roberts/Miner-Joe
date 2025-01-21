@@ -6,9 +6,13 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Levels/TestLevel.unity
+    path: Assets/Scenes/Planet.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   - enabled: 1
-    path: Assets/Scenes/Levels/TreasureRoom.unity
+    path: Assets/Scenes/PlanetTreasureRoom.unity
     guid: 2667e5f8f74b80546bb656b7ec35a00a
-  m_configObjects: {}
+  - enabled: 1
+    path: Assets/Scenes/Space.unity
+    guid: 2f8e72999c8c73c4393a159ecf4f27b9
+  m_configObjects:
+    com.unity.input.settings: {fileID: 11400000, guid: 0bf4e6a69d10f3745aebcd465eb5154a, type: 2}

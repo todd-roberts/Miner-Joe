@@ -1,0 +1,1 @@
+class SpaceshipFrozenState : State<Spaceship>{}

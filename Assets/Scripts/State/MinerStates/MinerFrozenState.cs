@@ -1,0 +1,1 @@
+class MinerFrozenState : State<Miner>{}

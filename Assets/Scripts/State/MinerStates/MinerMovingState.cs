@@ -32,7 +32,7 @@ class MinerMovingState : State<Miner>
     private void HandleFacing()
     {
         Vector2 movementInput = _entity.GetMovementInput();
-        Vector2 facing = _entity.GetFacing();
+        Vector2 facing = GameState.Miner.Facing;
 
         if (movementInput.x > 0)
         {
@@ -51,7 +51,7 @@ class MinerMovingState : State<Miner>
             facing = new Vector2(0, -1);
         }
 
-        _entity.SetFacing(facing);
+        GameState.Miner.Facing = facing;
     }
 
     private void HandleSpriteFlip()
